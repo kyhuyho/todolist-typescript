@@ -1,7 +1,8 @@
-import { useEffect, useReducer, useRef, useState } from "react";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useEffect, useReducer, useRef, useState } from "react";
 
 const Heading = ({ title }: { title: string }) => {
-  return <h2 className="font-semibold text-2xl">{title}</h2>;
+  return <h2 className="text-2xl font-semibold">{title}</h2>;
 };
 type TypeAction =
   | {
@@ -61,16 +62,24 @@ function App() {
       .then((res) => res.json())
       .then((rs) => setData(rs));
   }, []);
+  const onClickItem = (item: string) => {
+    alert(item);
+  };
   return (
     <div className="w-[500px] mx-auto mt-[100px]">
       <Heading title="Todo List" />
+      <List
+        items={["HTML", "CSS", "JS", "TS", "React"]}
+        onClickItem={onClickItem}
+      />
+      <Boxed>Component Boxed</Boxed>
       <div>
         {todos.length > 0 &&
           todos.map((item: ITodo) => (
-            <div className="flex items-center gap-x-2 mt-5" key={item.id}>
+            <div className="flex items-center mt-5 gap-x-2" key={item.id}>
               <span>{item.text}</span>
               <button
-                className="p-2 bg-red-500 text-white rounded-lg"
+                className="p-2 text-white bg-red-500 rounded-lg"
                 onClick={() => handleRemoveTodo(item.id)}
               >
                 Remove
@@ -78,15 +87,15 @@ function App() {
             </div>
           ))}
       </div>
-      <div className="flex gap-x-2 mt-5">
+      <div className="flex mt-5 gap-x-2">
         <input
           ref={inputRef}
           type="text"
-          className="p-3 border border-slate-400 rounded-lg outline-none"
+          className="p-3 border rounded-lg outline-none border-slate-400"
           placeholder="Enter your text"
         />
         <button
-          className="p-3 bg-blue-500 text-white rounded-lg"
+          className="p-3 text-white bg-blue-500 rounded-lg"
           onClick={() => handleAddTodo()}
         >
           Add todo
@@ -96,4 +105,29 @@ function App() {
   );
 }
 
+const List = ({
+  items,
+  onClickItem = () => {},
+}: {
+  items: string[];
+  onClickItem: (item: string) => void;
+}) => {
+  return (
+    <div>
+      {items?.map((item, index) => (
+        <div
+          onClick={() => onClickItem(item)}
+          key={index}
+          className="cursor-pointer"
+        >
+          {item}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const Boxed = ({ children }: { children: React.ReactNode }) => {
+  return <div>{children}</div>;
+};
 export default App;
